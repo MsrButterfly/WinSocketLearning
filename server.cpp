@@ -7,21 +7,21 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
-using Socket          = SOCKET;
-using SocketAddress   = SOCKADDR;
+using Socket = SOCKET;
+using SocketAddress = SOCKADDR;
 using SocketAddressIn = SOCKADDR_IN;
-using Word            = WORD;
+using Word = WORD;
 inline Word makeWord(const int &a, const int &b) {
     return MAKEWORD(a, b);
 }
-const uint64_t ServerIP      = 0xC0A80106; // or const char *ServerIP = 192.168.1.6, with inet_addr(ServerIP)
-const uint32_t ServerPort    = 10000;
-const uint32_t BackLog       = 10;
-const uint32_t MaxDataLength = MAX_PATH;
+const uint64_t ServerIP = 0xC0A80106; // or const char *ServerIP = 192.168.1.6, with inet_addr(ServerIP)
+const uint32_t ServerPort = 10000;
+const uint32_t BackLog = 10;
+const uint16_t MaxDataLength = MAX_PATH;
 
 int main(int argc, const char *argv[]) {
     WSAData wsaData;
-    const Word versionRequested = makeWord(2, 2);
+    const auto versionRequested = makeWord(2, 2);
     if (WSAStartup(versionRequested, &wsaData) != 0) {
         std::cerr << "Can not initialse windows socket." << std::endl;
         return EXIT_FAILURE;
@@ -58,10 +58,10 @@ int main(int argc, const char *argv[]) {
             std::cerr << "Can not accept data from specified socket now." << std::endl;
             return EXIT_FAILURE;
         }
-        const short net = clientAddress.sin_addr.s_net;
-        const short host = clientAddress.sin_addr.s_host;
-        const short logicalHost = clientAddress.sin_addr.s_lh;
-        const short imp = clientAddress.sin_addr.s_impno;
+        const uint16_t net = clientAddress.sin_addr.s_net;
+        const uint16_t host = clientAddress.sin_addr.s_host;
+        const uint16_t logicalHost = clientAddress.sin_addr.s_lh;
+        const uint16_t imp = clientAddress.sin_addr.s_impno;
         std::cout << "Connected to " << net << '.' << host << '.' << logicalHost << '.' << imp << '.' << std::endl;
         threads.emplace_back(new std::thread([clientSocket, net, host, logicalHost, imp, &serverSocket, &threads]() {
             char data[MaxDataLength];
@@ -75,8 +75,8 @@ int main(int argc, const char *argv[]) {
                 }
                 if (strcmp(data, "shutdown") == 0) {
                     closesocket(serverSocket);
-                    for (size_t i = 0; i < threads.size(); i++) {
-                        threads[i]->detach();
+                    for (const auto &thread : threads) {
+                        thread->detach();
                     }
                     WSACleanup();
                     exit(EXIT_SUCCESS);

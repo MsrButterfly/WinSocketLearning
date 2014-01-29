@@ -2,24 +2,23 @@
 #include <thread>
 #include <cstring>
 #include <windows.h>
-#include <process.h>
 
 #pragma comment(lib, "Ws2_32.lib")
 
-using Socket          = SOCKET;
-using SocketAddress   = SOCKADDR;
+using Socket = SOCKET;
+using SocketAddress = SOCKADDR;
 using SocketAddressIn = SOCKADDR_IN;
-using Word            = WORD;
+using Word = WORD;
 inline Word makeWord(const int &a, const int &b) {
     return MAKEWORD(a, b);
 }
-const uint64_t ServerIP      = 0xC0A80106; // or const char *ServerIP = 192.168.1.6, with inet_addr(ServerIP)
-const uint32_t ServerPort    = 10000;
-const uint32_t MaxDataLength = MAX_PATH;
+const uint64_t ServerIP = 0xC0A80106; // or const char *ServerIP = 192.168.1.6, with inet_addr(ServerIP)
+const uint32_t ServerPort = 10000;
+const uint16_t MaxDataLength = MAX_PATH;
 
 int main(int argc, const char *argv[]) {
     WSAData wsaData;
-    const Word versionRequested = makeWord(2, 2);
+    const auto versionRequested = makeWord(2, 2);
     if (WSAStartup(versionRequested, &wsaData) != 0) {
         std::cerr << "Can not initialse windows socket." << std::endl;
         return EXIT_FAILURE;
