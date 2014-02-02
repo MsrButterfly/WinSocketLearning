@@ -23,7 +23,7 @@ int main(int argc, const char *argv[]) {
     WSAData wsaData;
     const auto versionRequested = makeWord(2, 2);
     if (WSAStartup(versionRequested, &wsaData) != 0) {
-        std::cerr << "Can not initialse windows socket." << std::endl;
+        std::cerr << "Can not initialize windows socket." << std::endl;
         return EXIT_FAILURE;
     }
     Socket serverSocket;
